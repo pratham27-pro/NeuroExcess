@@ -1,1 +1,312 @@
-@import "tailwindcss";
+:root {
+  --font-display: 'Lexend', system-ui, sans-serif;
+  --font-body: 'Lexend', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Light theme (default) */
+  --bg: #F6F9FF;
+  --bg-soft: #EEF3FC;
+  --surface: #FFFFFF;
+  --surface-raised: #FFFFFF;
+  --border: #E1E8F5;
+  --border-strong: #C7D4EC;
+  --text: #10203D;
+  --text-muted: #57648A;
+  --text-faint: #8593B8;
+
+  --primary: #2F6FED;
+  --primary-hover: #2159CE;
+  --primary-soft: #E8F0FE;
+  --primary-soft-border: #C9DBFC;
+  --on-primary: #FFFFFF;
+
+  --accent: #0EA5A4;
+  --accent-soft: #E3F7F6;
+
+  --warn: #B5460A;
+  --warn-soft: #FDEEE4;
+
+  --focus-ring: #2F6FED;
+
+  --shadow-sm: 0 1px 2px rgba(16, 32, 61, 0.06);
+  --shadow-md: 0 8px 24px rgba(16, 32, 61, 0.08);
+  --shadow-lg: 0 20px 48px rgba(16, 32, 61, 0.12);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --duration: 140ms;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #050810;
+  --bg-soft: #050810;
+  --surface: #121725;
+  --surface-raised: #16213E;
+  --border: #1c2747;
+  --border-strong: #2C3D6B;
+  --text: #EAF0FF;
+  --text-muted: #A6B3D6;
+  --text-faint: #77839F;
+
+  --primary: #5C8DFF;
+  --primary-hover: #7CA3FF;
+  --primary-soft: #182543;
+  --primary-soft-border: #2A3E70;
+  --on-primary: #071026;
+
+  --accent: #3FD1CB;
+  --accent-soft: #103732;
+
+  --warn: #F0895A;
+  --warn-soft: #3A2115;
+
+  --focus-ring: #7CA3FF;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+   Reset & base
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: 0.1px;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--duration) ease, color var(--duration) ease;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.1px;
+  margin: 0 0 0.5em 0;
+  color: var(--text);
+}
+
+p {
+  margin: 0 0 1em 0;
+  color: var(--text-muted);
+  max-width: 62ch;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img { max-width: 100%; display: block; }
+
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+ul { margin: 0; padding: 0; list-style: none; }
+
+/* Visible, generous focus states (never remove) */
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Respect reduced motion & keep motion minimal regardless */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Layout utilities
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 96px 0;
+}
+
+@media (max-width: 900px) {
+  .section { padding: 64px 0; }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border: 1px solid var(--primary-soft-border);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+}
+
+.section-head {
+  max-width: 640px;
+  margin-bottom: 48px;
+}
+
+.section-head p {
+  font-size: 17px;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  padding: 13px 24px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--duration) ease, border-color var(--duration) ease, transform var(--duration) ease;
+  white-space: nowrap;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover { background: var(--primary-hover); }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+}
+.btn-ghost:hover { color: var(--text); }
+
+.btn-lg { padding: 15px 30px; font-size: 16px; }
+.btn-block { width: 100%; }
+
+/* ============================================================
+   Cards
+   ============================================================ */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   Reading-ease helper (matches product feature: readable measure,
+   generous line-height, no justified text, no all-caps body copy)
+   ============================================================ */
+
+.lede {
+  font-size: 19px;
+  color: var(--text-muted);
+  max-width: 54ch;
+}
+
+.pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   CTA banner — shared across Home, Features, Pricing, Setup.
+   Lives here (not in a per-page <style> block) so every page
+   that renders a .cta-banner gets the same base layout.
+   Pages can still layer a modifier class (e.g. .cta-banner-flat)
+   in their own <style> block to restyle it locally.
+   ============================================================ */
+
+.cta-banner {
+  background: linear-gradient(120deg, var(--primary), var(--primary-hover));
+  border-radius: var(--radius-lg);
+  padding: 56px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.cta-banner h2 {
+  color: #fff;
+  font-size: clamp(30px, 4vw, 44px);
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+.cta-banner p {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  max-width: 46ch;
+}
+.cta-banner-btn {
+  background: #fff;
+  color: var(--primary-hover);
+  flex-shrink: 0;
+}
+.cta-banner-btn:hover {
+  background: #EAF0FF;
+}
+
+@media (max-width: 560px) {
+  .cta-banner { padding: 40px 28px; }
+}

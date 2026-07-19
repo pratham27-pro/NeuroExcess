@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Syllable Highlighting Test Page</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 2rem;
+        line-height: 1.7;
+        font-size: 1.15rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Syllable Highlighting Test Page</h1>
+    <p>
+      Enable Syllable Highlighting in the popup. Select the paragraph below with your mouse — a
+      "🔊 Read aloud" button should appear near the selection.
+    </p>
+    <p id="sample">
+      Accessibility, internationalization, and interoperability are famously long words that make
+      excellent test cases for syllable highlighting, hyphenation, and word-boundary detection.
+    </p>
+    <p>
+      Click "Read aloud" and watch the reading bar at the bottom of the page: each word should
+      underline as it's spoken, with the currently-estimated syllable highlighted inside it. This
+      is an approximation (no browser exposes real syllable-level speech timing), not a frame-exact
+      audio sync — verify it's reasonably close, not perfect.
+    </p>
+    <p>
+      Try stopping playback mid-sentence with the "Stop" button and confirm the reading bar and
+      highlight clear completely, with no leftover state if you start a new selection afterward.
+    </p>
+  </body>
+</html>

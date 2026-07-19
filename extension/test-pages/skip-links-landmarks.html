@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Skip Links Test Page</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+      }
+      header,
+      nav,
+      main,
+      footer {
+        padding: 1.5rem;
+      }
+      header {
+        background: #1e293b;
+        color: #fff;
+      }
+      nav {
+        background: #334155;
+        color: #fff;
+      }
+      nav a {
+        color: #fff;
+        margin-right: 1rem;
+      }
+      main {
+        min-height: 40vh;
+      }
+      footer {
+        background: #1e293b;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Skip Links Test Page</h1>
+    </header>
+    <nav aria-label="Primary">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+    <main>
+      <h2>Main Content</h2>
+      <p>
+        Click anywhere in the page background, then press Tab once. The first focused element
+        should be a hidden-until-focus "Skip to main content" link, followed by "Skip to
+        navigation" on the next Tab press — both should appear before any of the real navigation
+        links above.
+      </p>
+      <p>Press Enter on a skip link to confirm focus/scroll jumps to its target.</p>
+    </main>
+    <footer>
+      <p>Footer content.</p>
+    </footer>
+
+    <hr />
+
+    <h2 style="padding: 0 1.5rem">No-landmarks fallback test</h2>
+    <p style="padding: 0 1.5rem">
+      The section below has no semantic landmarks at all ("div soup") — Skip Links should fall
+      back to generating a single skip link targeting the first &lt;h1&gt; it can find on the
+      page (the "Skip Links Test Page" heading above), rather than producing no skip links.
+    </p>
+    <div style="padding: 0 1.5rem">
+      <div>
+        <div>
+          <p>Deeply nested content with no ARIA roles or semantic elements.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Reading Ruler Test Page</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 2rem;
+        line-height: 1.7;
+      }
+      p {
+        margin-bottom: 1.25rem;
+      }
+      a {
+        color: #2563eb;
+      }
+      input {
+        display: block;
+        margin: 1rem 0;
+        padding: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Reading Ruler Test Page</h1>
+    <p>
+      Enable Reading Ruler in the popup, then move your mouse down this page. A dimming band
+      should track the line under your cursor, obscuring everything else.
+    </p>
+    <p>
+      Try clicking <a href="#focus-target">this link</a> while the dimmed area covers it — the
+      click should still work, since the overlay must never intercept pointer events.
+    </p>
+    <p>
+      Set the follow mode to keyboard-only (or "both") in the popup's Reading Ruler options, then
+      press Tab repeatedly. The band should jump to follow keyboard focus instead of the mouse.
+    </p>
+    <input type="text" placeholder="Focusable field 1" />
+    <input type="text" placeholder="Focusable field 2" />
+    <p id="focus-target">
+      This is a focus target paragraph used by the click-through test above.
+    </p>
+    <p>
+      Scroll the page while the ruler is active — the dimming band should stay correctly
+      positioned relative to the viewport, not drift. Finally, disable Reading Ruler and confirm
+      the overlay disappears completely with no residue.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+      labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+      laboris nisi ut aliquip ex ea commodo consequat.
+    </p>
+    <p>
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+      mollit anim id est laborum.
+    </p>
+  </body>
+</html>

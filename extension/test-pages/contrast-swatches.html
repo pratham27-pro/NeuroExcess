@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Contrast Fixer Test Page</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        max-width: 720px;
+      }
+      .block {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+      }
+      .low-contrast-1 {
+        background: #ffffff;
+        color: #cfcfcf;
+      }
+      .low-contrast-2 {
+        background: #f2f2f2;
+        color: #a8a8a8;
+      }
+      .low-contrast-dark {
+        background: #1a1a1a;
+        color: #3a3a3a;
+      }
+      .swatch-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .swatch {
+        flex: 1;
+        padding: 1.5rem;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 600;
+      }
+      .red-green {
+        background: #c0392b;
+        color: #27ae60;
+      }
+      .blue-yellow {
+        background: #2980b9;
+        color: #f1c40f;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Contrast Fixer Test Page</h1>
+    <p>Use this page to verify contrast fixer's WCAG fixes and color-blind presets.</p>
+
+    <div class="block low-contrast-1">Low-contrast text: light gray on white (should fail AA).</div>
+    <div class="block low-contrast-2">Low-contrast text: medium gray on light gray (should fail AA).</div>
+    <div class="block low-contrast-dark">Low-contrast text: dark gray on near-black (should fail AA).</div>
+
+    <h2>Color-only meaning swatches (for color-blind presets)</h2>
+    <div class="swatch-row">
+      <div class="swatch red-green">Red / Green pair</div>
+      <div class="swatch blue-yellow">Blue / Yellow pair</div>
+    </div>
+
+    <p>
+      Toggle Contrast Fixer in the popup, cycle through color-blind presets (None / Protanopia /
+      Deuteranopia / Tritanopia), and toggle the AA/AAA contrast target. Then disable the feature
+      and confirm every block above returns to its exact original color.
+    </p>
+  </body>
+</html>

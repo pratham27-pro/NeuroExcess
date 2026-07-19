@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Calm Theme Test Page</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .banner {
+        background: linear-gradient(90deg, #ff4d4d, #ffd700, #4dff4d, #4d4dff);
+        background-size: 400% 400%;
+        animation: shift 2s ease infinite;
+        padding: 1.5rem;
+        border-radius: 8px;
+        color: #111;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      @keyframes shift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .layout {
+        display: flex;
+        gap: 1rem;
+      }
+      main {
+        flex: 1;
+      }
+      aside#sidebar {
+        width: 200px;
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 6px;
+      }
+      .advertisement {
+        background: #fef08a;
+        padding: 1rem;
+        margin: 1rem 0;
+        border: 1px dashed #ca8a04;
+        border-radius: 6px;
+      }
+      video {
+        width: 100%;
+        max-width: 320px;
+        background: #000;
+        border-radius: 6px;
+      }
+      button {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calm Theme Test Page</h1>
+    <div class="banner">This banner has a continuous CSS animation.</div>
+
+    <p>
+      Toggle each Calm Theme sub-option independently in the popup: Muted colors, Reduce motion,
+      Declutter layout. Verify each reverts cleanly when turned off, and that the others are
+      unaffected.
+    </p>
+
+    <video id="autoplay-video" autoplay loop muted playsinline></video>
+    <p>
+      <small
+        >This video has no real source (fine for testing) — the point is to verify Reduce Motion
+        removes the <code>autoplay</code> attribute (inspect via devtools) and calls
+        <code>pause()</code>. Point <code>src</code> at a real local video file to see actual
+        playback stop.</small
+      >
+    </p>
+
+    <button id="inject-video-btn" type="button">Inject a new autoplaying video (SPA test)</button>
+
+    <div class="layout">
+      <main>
+        <p>This is the main article content — it should never be faded by Declutter.</p>
+        <div class="advertisement">This looks like an ad slot and should fade when Declutter is on.</div>
+        <p>More main content, unaffected by declutter.</p>
+      </main>
+      <aside id="sidebar">
+        <h2>Sidebar</h2>
+        <p>Non-essential sidebar content — should fade when Declutter is on.</p>
+      </aside>
+    </div>
+
+    <script>
+      document.getElementById("inject-video-btn").addEventListener("click", () => {
+        const video = document.createElement("video")
+        video.autoplay = true
+        video.loop = true
+        video.muted = true
+        video.style.width = "200px"
+        video.style.background = "#000"
+        video.style.marginTop = "1rem"
+        video.dataset.injected = "true"
+        document.body.appendChild(video)
+      })
+    </script>
+  </body>
+</html>
