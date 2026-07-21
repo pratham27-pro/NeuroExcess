@@ -14,7 +14,8 @@ export function mergeSettings(base: GlobalSettings, patch: SettingsPatch | undef
     readingRuler: { ...base.readingRuler, ...patch.readingRuler },
     syllableHighlighting: { ...base.syllableHighlighting, ...patch.syllableHighlighting },
     calmTheme: { ...base.calmTheme, ...patch.calmTheme },
-    skipLinks: { ...base.skipLinks, ...patch.skipLinks }
+    skipLinks: { ...base.skipLinks, ...patch.skipLinks },
+    globalMode: { ...base.globalMode, ...patch.globalMode }
   }
 }
 
@@ -25,6 +26,7 @@ export function mergePartialOverrides(base: SiteOverride, patch: SiteOverride): 
     readingRuler: mergeOptional(base.readingRuler, patch.readingRuler),
     syllableHighlighting: mergeOptional(base.syllableHighlighting, patch.syllableHighlighting),
     calmTheme: mergeOptional(base.calmTheme, patch.calmTheme),
-    skipLinks: mergeOptional(base.skipLinks, patch.skipLinks)
+    skipLinks: mergeOptional(base.skipLinks, patch.skipLinks),
+    globalMode: mergeOptional(base.globalMode, patch.globalMode)
   }
 }

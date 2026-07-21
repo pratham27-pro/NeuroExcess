@@ -31,5 +31,10 @@ export const FEATURE_META: Record<FeatureId, FeatureMeta> = {
     icon: "\u{23ED}️",
     label: "Skip Links",
     description: "Jump past repetitive navigation with the keyboard"
+  },
+  globalMode: {
+    icon: "\u{1F5B1}️",
+    label: "Global Accessibility Mode",
+    description: "One-click page audit with safe automatic fixes"
   }
 }

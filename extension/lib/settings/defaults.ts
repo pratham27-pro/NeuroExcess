@@ -31,5 +31,8 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   // that justifies opt-in for the other features.
   skipLinks: {
     enabled: true
+  },
+  globalMode: {
+    enabled: false
   }
 }

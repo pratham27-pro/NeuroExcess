@@ -12,9 +12,9 @@ This is a **multi-module repo, not a shared-tooling monorepo**. Each module belo
 
 Do not run `/graphify` in this repo — it's a small project and the generated `graphify-out/` output isn't wanted here (it's gitignored as a backstop, but don't regenerate it in the first place).
 
-- `extension/` — the browser extension itself (the core product). Plasmo, TypeScript, Tailwind v3, npm.
+- `extension/` — the browser extension itself (the core product). Plasmo, TypeScript, Tailwind v3, npm. Manual test fixtures live in `extension/test-pages/` — one static HTML file per feature, deliberately containing the issues that feature should detect/fix (e.g. `global-mode-audit.html` has one of each issue category the Global Mode audit checks for). Load the built extension unpacked and open these fixtures to verify a feature by hand; add a new fixture here when building a new feature.
 - `website/` — marketing site: landing page, pricing, about, features, support. Vite + React (JavaScript, not TypeScript), Tailwind v4 (CSS-first config via `@tailwindcss/vite`, no `tailwind.config.js`), oxlint, npm.
-- `backend/` — thin backend proxy for AI calls (image labeling, OCR). FastAPI (Python), uv. Currently only the uv package skeleton (`src/backend/__init__.py` with a placeholder `main()`) — no FastAPI app has been written yet.
+- `backend/` — thin backend proxy for AI calls (image labeling, OCR) plus auth. FastAPI (Python), uv. The app lives in `src/main.py` (`app = FastAPI()`), routes mounted via `src/api/router.py`: `/image/caption` (HuggingFace BLIP captioning with a local Pillow-based heuristic fallback), `/ocr/extract` (EasyOCR), and `/auth/register`, `/auth/login`, `/auth/me` (JWT auth backed by MongoDB via pymongo). Requires `HF_API_KEY` and `MONGODB_URI` env vars (see `src/core/config.py`) — no `.env.example` exists yet, so get real values from whoever set up the Mongo instance/HF key before running locally.
 
 ## Commands
 
@@ -35,11 +35,9 @@ npm run preview       # preview production build
 
 ### backend/ (FastAPI, uv)
 ```
-uv run backend                          # runs the current placeholder entrypoint (src/backend/__init__.py:main)
-uv run uvicorn backend.main:app --reload   # once an app/main.py with `app = FastAPI()` exists
-uv run pytest                           # run tests
-uv run pytest path/to/test_file.py::test_name   # run a single test
+uv run uvicorn src.main:app --reload    # dev server (docs at /docs, redoc at /redoc)
 ```
+No test suite exists yet.
 
 ## Architecture principle: AI calls go through backend/, not directly from the extension
 
