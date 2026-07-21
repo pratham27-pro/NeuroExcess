@@ -1,12 +1,16 @@
 import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig } from "plasmo"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { calmThemeController } from "~features/calm-theme"
 import { contrastFixerController } from "~features/contrast-fixer"
 import { RulerOverlay } from "~features/reading-ruler/RulerOverlay"
 import { skipLinksController } from "~features/skip-links"
 import { ReadingBarOverlay } from "~features/syllable-highlighting/ReadingBarOverlay"
+import {
+  StandaloneReaderWidget,
+  type StandaloneReaderHandle
+} from "~features/syllable-highlighting/readerWidget"
 import { DEFAULT_GLOBAL_SETTINGS } from "~lib/settings/defaults"
 import type { GlobalSettings } from "~lib/settings/schema"
 import { watchEffectiveSettings } from "~lib/settings/store"
@@ -23,24 +27,33 @@ export const getStyle = () => {
 
 export const getShadowHostId = () => "neuroaccess-shadow-host"
 
-/**
- * A single content-script orchestrator (not five separate ones) so that features which must
- * coordinate — e.g. contrast fixer and calm theme both writing html's CSS `filter` property —
- * share one process instead of racing across independently-injected bundles. See the project
- * plan for the full rationale.
- */
+
 export default function NeuroAccessRoot() {
   const [settings, setSettings] = useState<GlobalSettings>(DEFAULT_GLOBAL_SETTINGS)
+  const standaloneReaderRef = useRef<StandaloneReaderHandle>(null)
+  const runtime = globalThis.chrome.runtime
 
   useEffect(() => {
     const unsubscribe = watchEffectiveSettings(location.hostname, setSettings)
     return () => {
       unsubscribe()
-      // Leave the page exactly as we found it if this content script instance is torn down.
-      contrastFixerController.remove()
       calmThemeController.remove()
       skipLinksController.remove()
     }
+  }, [])
+
+  // Triggered by the extension popup ("Read full page" button) and the context-menu item
+  // ("Read selection aloud", registered in the background script) via chrome.runtime.sendMessage.
+  useEffect(() => {
+    function onMessage(message: { type?: string }) {
+      if (message?.type === "neuroaccess:read-selection") {
+        standaloneReaderRef.current?.readSelection()
+      } else if (message?.type === "neuroaccess:read-page") {
+        standaloneReaderRef.current?.readPage()
+      }
+    }
+    runtime.onMessage.addListener(onMessage)
+    return () => runtime.onMessage.removeListener(onMessage)
   }, [])
 
   const contrastKey = JSON.stringify(settings.contrastFixer)
@@ -77,6 +90,7 @@ export default function NeuroAccessRoot() {
     <>
       <RulerOverlay settings={settings.readingRuler} />
       <ReadingBarOverlay settings={settings.syllableHighlighting} />
+      <StandaloneReaderWidget ref={standaloneReaderRef} rate={settings.syllableHighlighting.speechRate} />
     </>
   )
 }
