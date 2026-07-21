@@ -10,6 +10,9 @@ type PlaybackState = "idle" | "playing" | "paused"
 export interface StandaloneReaderHandle {
   readSelection: () => void
   readPage: () => void
+  stop: () => void
+  pause: () => void
+  resume: () => void
 }
 
 interface StandaloneReaderWidgetProps {
@@ -44,11 +47,6 @@ export const StandaloneReaderWidget = forwardRef<StandaloneReaderHandle, Standal
       setState("playing")
     }
 
-    useImperativeHandle(ref, () => ({
-      readSelection: () => start(window.getSelection()?.toString().trim() ?? ""),
-      readPage: () => start(extractPageText())
-    }))
-
     function pause() {
       handleRef.current?.pause()
       setState("paused")
@@ -63,6 +61,14 @@ export const StandaloneReaderWidget = forwardRef<StandaloneReaderHandle, Standal
       handleRef.current?.stop()
       setState("idle")
     }
+
+    useImperativeHandle(ref, () => ({
+      readSelection: () => start(window.getSelection()?.toString().trim() ?? ""),
+      readPage: () => start(extractPageText()),
+      stop,
+      pause,
+      resume
+    }))
 
     if (state === "idle") return null
 

@@ -15,6 +15,7 @@ export function mergeSettings(base: GlobalSettings, patch: SettingsPatch | undef
     syllableHighlighting: { ...base.syllableHighlighting, ...patch.syllableHighlighting },
     calmTheme: { ...base.calmTheme, ...patch.calmTheme },
     skipLinks: { ...base.skipLinks, ...patch.skipLinks },
+    voiceCommands: { ...base.voiceCommands, ...patch.voiceCommands },
     globalMode: { ...base.globalMode, ...patch.globalMode }
   }
 }
@@ -27,6 +28,7 @@ export function mergePartialOverrides(base: SiteOverride, patch: SiteOverride): 
     syllableHighlighting: mergeOptional(base.syllableHighlighting, patch.syllableHighlighting),
     calmTheme: mergeOptional(base.calmTheme, patch.calmTheme),
     skipLinks: mergeOptional(base.skipLinks, patch.skipLinks),
+    voiceCommands: mergeOptional(base.voiceCommands, patch.voiceCommands),
     globalMode: mergeOptional(base.globalMode, patch.globalMode)
   }
 }

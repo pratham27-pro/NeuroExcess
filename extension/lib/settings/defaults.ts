@@ -32,6 +32,9 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {
   skipLinks: {
     enabled: true
   },
+  voiceCommands: {
+    enabled: false
+  },
   globalMode: {
     enabled: false
   }

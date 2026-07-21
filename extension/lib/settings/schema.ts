@@ -34,6 +34,10 @@ export interface SkipLinksSettings {
   enabled: boolean
 }
 
+export interface VoiceCommandsSettings {
+  enabled: boolean
+}
+
 export interface GlobalModeSettings {
   enabled: boolean
 }
@@ -45,6 +49,7 @@ export interface GlobalSettings {
   syllableHighlighting: SyllableHighlightingSettings
   calmTheme: CalmThemeSettings
   skipLinks: SkipLinksSettings
+  voiceCommands: VoiceCommandsSettings
   globalMode: GlobalModeSettings
 }
 
@@ -54,6 +59,7 @@ export type FeatureId =
   | "syllableHighlighting"
   | "calmTheme"
   | "skipLinks"
+  | "voiceCommands"
   | "globalMode"
 
 /** A partial patch shape mirroring GlobalSettings, one level of partiality per feature. */
@@ -64,6 +70,7 @@ export interface SettingsPatch {
   syllableHighlighting?: Partial<SyllableHighlightingSettings>
   calmTheme?: Partial<CalmThemeSettings>
   skipLinks?: Partial<SkipLinksSettings>
+  voiceCommands?: Partial<VoiceCommandsSettings>
   globalMode?: Partial<GlobalModeSettings>
 }
 
