@@ -14,7 +14,16 @@ let pendingMutations: MutationRecord[] = []
 function flush(): void {
   const mutations = pendingMutations
   pendingMutations = []
-  subscribers.forEach((callback) => callback(mutations))
+  // One shared observer serves multiple independent features — a throw from one subscriber's
+  // callback must not stop the others from receiving this batch (plain forEach would abort the
+  // whole loop on the first exception).
+  subscribers.forEach((callback) => {
+    try {
+      callback(mutations)
+    } catch (error) {
+      console.error("[NeuroAccess] mutation subscriber failed:", error)
+    }
+  })
 }
 
 function ensureObserverStarted(): void {

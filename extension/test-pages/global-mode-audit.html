@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Global Mode Test Page</title>
+    <!--
+      No `lang` attribute on <html> above — deliberate, to trigger the missingLang check.
+    -->
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        max-width: 720px;
+      }
+      section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+      }
+      section h3 {
+        margin-top: 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.75rem;
+      }
+      input,
+      select,
+      textarea {
+        display: block;
+        margin-top: 0.25rem;
+      }
+      button {
+        margin-right: 0.5rem;
+      }
+      .icon-only {
+        width: 2rem;
+        height: 2rem;
+      }
+      #dynamic-zone {
+        min-height: 2rem;
+      }
+      code {
+        background: #f3f4f6;
+        padding: 0.1rem 0.3rem;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      Deliberately using h2 as the page's top-level heading (not h1) so the
+      "No H1 on the page" heading-order issue fires. A real h1 would mask it.
+    -->
+    <h2>Global Mode Test Page</h2>
+    <p>
+      This page has one of each issue Global Mode's audit (<code>extension/features/global-mode/</code>)
+      knows how to detect. Toggle "Global Accessibility Mode" on in the popup, then:
+    </p>
+    <ul>
+      <li>Watch the bottom-left on-page summary and the popup's summary panel update — expand
+        "Details" in either one to see the per-category found/fixed breakdown.</li>
+      <li>Inspect elements below for <code>alt</code> / <code>aria-label</code> attributes tagged
+        with <code>data-na-added-*</code>.</li>
+      <li>Toggle the feature back off and confirm every added attribute is removed, restoring the
+        page exactly as it was.</li>
+    </ul>
+
+    <section>
+      <h3>Missing alt text</h3>
+      <img src="https://picsum.photos/id/237/160/120" />
+      <p>Expected fix: <code>alt="team photo"</code>-style text derived from the filename.</p>
+    </section>
+
+    <section>
+      <h3>Unlabeled form fields</h3>
+      <form>
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" />
+        <p>^ correctly labelled — should <em>not</em> be flagged.</p>
+
+        <input type="text" name="fullName" placeholder="Your full name" />
+        <select id="country" name="country">
+          <option>United States</option>
+          <option>Canada</option>
+        </select>
+        <textarea name="message" placeholder="Type your message"></textarea>
+      </form>
+      <p>
+        Expected fix: each unlabeled field gets an <code>aria-label</code> derived from its
+        placeholder or name (e.g. "Your full name", "Dropdown", "Type your message").
+      </p>
+    </section>
+
+    <section>
+      <h3>Unlabeled buttons / links</h3>
+      <button type="button">Save changes</button>
+      <p>^ correctly labelled — should <em>not</em> be flagged.</p>
+
+      <button type="button" class="icon-only">✕</button>
+      <a href="#" class="icon-only">➜</a>
+      <p>Expected fix: <code>aria-label="Button"</code> / <code>aria-label="Link"</code> (or the
+        control's <code>title</code>, if it has one).</p>
+
+      <button type="button" class="icon-only">
+        <img src="https://picsum.photos/id/1/40/40" alt="Close dialog" />
+      </button>
+      <p>^ has no visible text and no <code>aria-label</code>/<code>title</code> of its own, but
+        its only child is an <code>&lt;img alt="Close dialog"&gt;</code> — that counts as an
+        accessible name, so this should <em>not</em> be flagged (and definitely shouldn't get
+        overwritten with a generic <code>aria-label="Button"</code>).</p>
+    </section>
+
+    <section>
+      <h3>Missing page language</h3>
+      <p>
+        This document has no <code>lang</code> attribute on <code>&lt;html&gt;</code> — flagged for
+        manual review, not auto-fixed. Global Mode used to guess a value from the browser's locale
+        (<code>navigator.language</code>), but that's the visitor's locale, not necessarily the
+        page's actual content language, so a wrong guess could make a screen reader mispronounce
+        the entire page. Safer to leave it to a human than to silently apply a guess.
+      </p>
+    </section>
+
+    <section>
+      <h3>Heading order</h3>
+      <p>No <code>&lt;h1&gt;</code> anywhere on this page (see the page title above) — that alone
+        is one heading-order issue. This subsection also jumps from h2 straight to h4:</p>
+      <h4>Skipped h3</h4>
+      <p>Heading-order issues are flagged but never auto-fixed (Global Mode won't reshuffle
+        heading levels), so this should show up under "Need manual review".</p>
+    </section>
+
+    <section>
+      <h3>Missing landmark</h3>
+      <p>
+        This page has no <code>&lt;main&gt;</code> and no <code>role="main"</code> anywhere —
+        also flagged for manual review rather than auto-fixed, since inventing a wrapper risks
+        breaking existing layout.
+      </p>
+    </section>
+
+    <section>
+      <h3>Dynamic content (mutation-driven re-audit)</h3>
+      <p>
+        Global Mode keeps watching the page while it's on. Click the button below to inject a new
+        unlabeled image and button after the initial audit already ran, and confirm the summary
+        counts increase without re-toggling the feature.
+      </p>
+      <button type="button" id="add-dynamic">Add dynamic content</button>
+      <div id="dynamic-zone"></div>
+    </section>
+
+    <script>
+      document.getElementById("add-dynamic").addEventListener("click", () => {
+        const zone = document.getElementById("dynamic-zone")
+        const img = document.createElement("img")
+        img.src = "https://picsum.photos/id/238/120/80"
+        const btn = document.createElement("button")
+        btn.type = "button"
+        btn.textContent = ""
+        btn.className = "icon-only"
+        btn.append("★")
+        zone.append(img, btn)
+      })
+    </script>
+  </body>
+</html>

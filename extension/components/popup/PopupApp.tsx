@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 import { useActiveTabHostname } from "~hooks/useActiveTabHostname"
+import { useAuditSummary } from "~hooks/useAuditSummary"
 import { useEffectiveSettings } from "~hooks/useEffectiveSettings"
 import { FEATURE_META } from "~lib/featureMeta"
 import type { FeatureId, GlobalSettings, SettingsPatch, SiteOverride } from "~lib/settings/schema"
@@ -9,14 +10,24 @@ import { CalmThemeOptions } from "./CalmThemeOptions"
 import { ContrastFixerOptions } from "./ContrastFixerOptions"
 import { CurrentSiteHeader } from "./CurrentSiteHeader"
 import { FeatureToggleRow } from "./FeatureToggleRow"
+import { GlobalModeSummary } from "./GlobalModeSummary"
 
 export function PopupApp() {
   const hostname = useActiveTabHostname()
   const { effective, override, isLoading, updateGlobal, updateSiteOverride, clearSiteOverride } =
     useEffectiveSettings(hostname)
+  const auditSummary = useAuditSummary(hostname)
   const [isCustomizing, setIsCustomizing] = useState(false)
+  const tabs = globalThis.chrome.tabs
 
   const hasOverrides = Object.keys(override).length > 0
+
+  function triggerReader(type: "neuroaccess:read-selection" | "neuroaccess:read-page") {
+    tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      if (!tab?.id) return
+      void tabs.sendMessage(tab.id, { type })
+    })
+  }
 
   function applyPatch<K extends FeatureId>(featureId: K, patch: Partial<GlobalSettings[K]>) {
     if (isCustomizing && hostname) {
@@ -43,7 +54,36 @@ export function PopupApp() {
           setIsCustomizing(false)
         }}
       />
+      <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
+        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+          Read aloud
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => triggerReader("neuroaccess:read-selection")}
+            className="flex-1 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            Read selection
+          </button>
+          <button
+            type="button"
+            onClick={() => triggerReader("neuroaccess:read-page")}
+            className="flex-1 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            Read page
+          </button>
+        </div>
+      </div>
       <div className="mt-1">
+        <FeatureToggleRow
+          icon={FEATURE_META.globalMode.icon}
+          label={FEATURE_META.globalMode.label}
+          description={FEATURE_META.globalMode.description}
+          enabled={effective.globalMode.enabled}
+          isOverridden={override.globalMode !== undefined}
+          onToggle={(enabled) => applyPatch("globalMode", { enabled })}>
+          {effective.globalMode.enabled ? <GlobalModeSummary summary={auditSummary} /> : null}
+        </FeatureToggleRow>
+
         <FeatureToggleRow
           icon={FEATURE_META.contrastFixer.icon}
           label={FEATURE_META.contrastFixer.label}
@@ -96,10 +136,19 @@ export function PopupApp() {
           isOverridden={override.skipLinks !== undefined}
           onToggle={(enabled) => applyPatch("skipLinks", { enabled })}
         />
+
+        <FeatureToggleRow
+          icon={FEATURE_META.voiceCommands.icon}
+          label={FEATURE_META.voiceCommands.label}
+          description={FEATURE_META.voiceCommands.description}
+          enabled={effective.voiceCommands.enabled}
+          isOverridden={override.voiceCommands !== undefined}
+          onToggle={(enabled) => applyPatch("voiceCommands", { enabled })}
+        />
       </div>
       <button
         type="button"
-        onClick={() => chrome.runtime.openOptionsPage()}
+        onClick={() => globalThis.chrome.runtime.openOptionsPage()}
         className="mt-3 w-full rounded border border-gray-200 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">
         Manage all site overrides
       </button>

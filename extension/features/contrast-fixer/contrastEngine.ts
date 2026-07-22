@@ -1,5 +1,6 @@
 import { getContrast, hsla, parseToHsla } from "color2k"
 
+import { NEUROACCESS_OWN_ELEMENT_SELECTOR } from "~lib/dom/ownElements"
 import type { ContrastLevel } from "~lib/settings/schema"
 
 const TARGET_RATIOS: Record<ContrastLevel, number> = { AA: 4.5, AAA: 7 }
@@ -7,9 +8,6 @@ const TARGET_RATIOS: Record<ContrastLevel, number> = { AA: 4.5, AAA: 7 }
 const MARK_ATTR = "data-na-contrast-fixed"
 const ORIGINAL_ATTR = "data-na-original-color"
 const HAD_INLINE_ATTR = "data-na-had-inline-color"
-
-// Elements we injected ourselves (skip links, color-blind SVG defs) shouldn't be re-scanned.
-const OWN_ELEMENT_SELECTOR = "#neuroaccess-skip-links, #neuroaccess-colorblind-filters"
 
 let observer: IntersectionObserver | undefined
 const fixedElements = new Set<HTMLElement>()
@@ -59,7 +57,7 @@ function adjustColorForContrast(textColor: string, bgColor: string, targetRatio:
 }
 
 function fixElementContrast(el: HTMLElement, targetRatio: number): void {
-  if (el.hasAttribute(MARK_ATTR) || el.closest(OWN_ELEMENT_SELECTOR)) return
+  if (el.hasAttribute(MARK_ATTR) || el.closest(NEUROACCESS_OWN_ELEMENT_SELECTOR)) return
 
   const computed = getComputedStyle(el)
   const textColor = computed.color

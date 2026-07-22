@@ -1,4 +1,8 @@
-export type ColorBlindMode = "none" | "protanopia" | "deuteranopia" | "tritanopia"
+export type ColorBlindMode =
+  | "none"
+  | "protanopia"
+  | "deuteranopia"
+  | "tritanopia"
 
 export type ContrastLevel = "AA" | "AAA"
 
@@ -34,6 +38,14 @@ export interface SkipLinksSettings {
   enabled: boolean
 }
 
+export interface VoiceCommandsSettings {
+  enabled: boolean
+}
+
+export interface GlobalModeSettings {
+  enabled: boolean
+}
+
 export interface GlobalSettings {
   version: number
   contrastFixer: ContrastFixerSettings
@@ -41,6 +53,8 @@ export interface GlobalSettings {
   syllableHighlighting: SyllableHighlightingSettings
   calmTheme: CalmThemeSettings
   skipLinks: SkipLinksSettings
+  voiceCommands: VoiceCommandsSettings
+  globalMode: GlobalModeSettings
 }
 
 export type FeatureId =
@@ -49,6 +63,8 @@ export type FeatureId =
   | "syllableHighlighting"
   | "calmTheme"
   | "skipLinks"
+  | "voiceCommands"
+  | "globalMode"
 
 /** A partial patch shape mirroring GlobalSettings, one level of partiality per feature. */
 export interface SettingsPatch {
@@ -58,6 +74,8 @@ export interface SettingsPatch {
   syllableHighlighting?: Partial<SyllableHighlightingSettings>
   calmTheme?: Partial<CalmThemeSettings>
   skipLinks?: Partial<SkipLinksSettings>
+  voiceCommands?: Partial<VoiceCommandsSettings>
+  globalMode?: Partial<GlobalModeSettings>
 }
 
 /** Per-hostname override — same shape as SettingsPatch minus the schema version. */

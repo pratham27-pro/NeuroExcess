@@ -6,8 +6,9 @@ export function useActiveTabHostname(): string | undefined {
 
   useEffect(() => {
     let cancelled = false
+    const tabs = globalThis.chrome.tabs
 
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    tabs.query({ active: true, currentWindow: true }, ([tab]) => {
       if (cancelled || !tab?.url) return
       try {
         setHostname(new URL(tab.url).hostname)
